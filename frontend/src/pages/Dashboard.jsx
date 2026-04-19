@@ -7,6 +7,7 @@ import Navbar from "../components/Navbar";
 const Dashboard = () => {
   const [name, setName] = useState("");
   const [token, setToken] = useState("");
+  const [expire, setExpire] = useState("");
   const [role, setRole] = useState("");
   const navigate = useNavigate();
 
@@ -24,9 +25,10 @@ const Dashboard = () => {
       setToken(newToken);
       setName(decoded.username);
       setRole(decoded.role);
+      setExpire(decoded.exp);
     } catch (error) {
       if (error.response) {
-        navigate("/");
+        navigate("/"); // Jika gagal refresh (tidak ada cookie), tendang ke Login
       }
     }
   }, [navigate]);
@@ -36,10 +38,8 @@ const Dashboard = () => {
 
     const fetchData = async () => {
       try {
-        // Panggil fungsi refreshToken kita
         await refreshToken();
       } catch (error) {
-        // Error sudah ditangani di dalam refreshToken (navigate ke "/")
         console.error("Authentication failed", error);
       }
     };
@@ -51,7 +51,7 @@ const Dashboard = () => {
     return () => {
       isMounted = false;
     };
-  }, [refreshToken]); //
+  }, [refreshToken]);
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -61,6 +61,9 @@ const Dashboard = () => {
           <h1 className="text-3xl font-bold text-slate-800 mb-2">
             Selamat Datang, <span className="text-blue-600">{name}</span>!
           </h1>
+          {/* <p className="text-slate-600">
+            Kamu berhasil login menggunakan sistem JWT yang aman.
+          </p> */}
           <p className="text-slate-500 mb-6 font-medium">
             Role kamu saat ini adalah:
             <span
@@ -82,6 +85,18 @@ const Dashboard = () => {
                 <p className="text-xs font-mono break-all text-slate-600">
                   {token}
                 </p>
+              </div>
+
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <p className="text-xs text-blue-400 mb-1">Token Expires At</p>
+                {expire && (
+                  <p className="text-sm font-semibold text-blue-700">
+                    {new Date(expire * 1000).toLocaleString("id-ID", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </p>
+                )}
               </div>
             </div>
           </div>
