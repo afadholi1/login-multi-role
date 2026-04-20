@@ -1,9 +1,13 @@
 import React from "react";
 import Navbar from "../components/Navbar";
+import { useNavigate } from "react-router-dom";
 
 // Dashboard sekarang menerima data 'user' dan 'token' dari App.js lewat props
 const Dashboard = ({ user, token }) => {
   // Karena data user sudah dicek di App.js, kita tinggal pakai
+
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-slate-100">
       <Navbar />
@@ -26,6 +30,18 @@ const Dashboard = ({ user, token }) => {
             </span>
           </p>
 
+          {/* Munculkan tombol ini hanya jika user adalah admin */}
+          {user?.role === "admin" && (
+            <div className="mt-6">
+              <button
+                onClick={() => navigate("/admin")}
+                className="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl transition shadow-lg"
+              >
+                Buka Panel Kontrol Admin
+              </button>
+            </div>
+          )}
+
           <div className="border-t pt-6">
             <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">
               Informasi Sesi Keamanan
@@ -45,12 +61,12 @@ const Dashboard = ({ user, token }) => {
 
             <div className="bg-blue-50 p-4 rounded-lg">
               <p className="text-xs text-blue-400 mb-1">Token Expires At</p>
-              
+
               <p className="text-sm font-semibold text-blue-700">
                 {new Date(user?.expire * 1000).toLocaleString("id-ID", {
                   dateStyle: "medium",
                   timeStyle: "short",
-                })} 
+                })}
               </p>
             </div>
           </div>

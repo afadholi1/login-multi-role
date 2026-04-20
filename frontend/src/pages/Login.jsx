@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
@@ -21,6 +21,11 @@ const Login = () => {
           withCredentials: true,
         },
       );
+
+      if (onLoginSuccess) {
+        await onLoginSuccess(); 
+      }
+
       navigate("/dashboard");
     } catch (error) {
       if (error.response) {

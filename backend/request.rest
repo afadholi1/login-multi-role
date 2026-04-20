@@ -1,25 +1,23 @@
-### Register User 1 (Admin)
+### Register User Baru
 POST http://localhost:5000/users
 Content-Type: application/json
 
 {
-    "username": "Admin Ganteng",
-    "email": "admin@gmail.com",
-    "password": "123",
-    "confPassword": "123",
+    "name": "Fadholi Dev",
+    "email": "fadholi@gmail.com",
+    "password": "password123",
+    "confPassword": "password123",
     "role": "admin"
 }
 
-### Register User 2 (User Biasa)
-POST http://localhost:5000/users
+### Update Nama User (Ganti UUID sesuai data di DB kamu)
+PATCH http://localhost:5000/users/fe0791a7-f01d-4f30-b94b-4189b4219bf8
 Content-Type: application/json
 
 {
-    "username": "User Biasa",
-    "email": "user@gmail.com",
-    "password": "123",
-    "confPassword": "123",
-    "role": "user"
+    "name": "Nama Baru Fadholi",
+    "email": "admin@gmail.com",
+    "role": "admin"
 }
 
 ### Login User

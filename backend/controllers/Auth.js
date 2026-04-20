@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export const Register = async (req, res) => {
-  const { username, email, password, confPassword, role } = req.body;
+  const { name, email, password, confPassword, role } = req.body;
 
   // Validasi jika password & konfirmasi password tidak cocok
   if (password !== confPassword)
@@ -18,7 +18,7 @@ export const Register = async (req, res) => {
 
   try {
     await Users.create({
-      username: username,
+      name: name,
       email: email,
       password: hashPassword,
       role: role,
