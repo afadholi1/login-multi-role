@@ -9,7 +9,7 @@ import ProtectedRoute from "./middleware/ProtectedRoute";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(""); // EDIT 1: Tambah state token
+  const [token, setToken] = useState(""); 
   const [loading, setLoading] = useState(true);
 
   const checkAuth = useCallback(async () => {
@@ -21,7 +21,7 @@ function App() {
       const decoded = jwtDecode(newToken);
       
       setToken(newToken);
-      setUser({ role: decoded.role, name: decoded.username });
+      setUser({ role: decoded.role, name: decoded.username, expire: decoded.exp });
     } catch (error) { // Gunakan nama variabel biasa
       console.error("Auth check failed:", error.message); // Gunakan variabelnya di sini
       setUser(null);
@@ -34,7 +34,7 @@ function App() {
   useEffect(() => {
     let isMounted = true;
 
-    // EDIT 2: Bungkus pemanggilan dalam fungsi asinkron internal
+    //Bungkus pemanggilan dalam fungsi asinkron internal
     const authenticate = async () => {
       if (isMounted) {
         await checkAuth();
@@ -62,7 +62,6 @@ function App() {
         <Route path="/" element={<Login onLoginSuccess={checkAuth} />} />
         
         <Route element={<ProtectedRoute isAllowed={!!user} />}>
-          {/* EDIT 3: Kirim token ke Dashboard */}
           <Route path="/dashboard" element={<Dashboard user={user} token={token} />} />
         </Route>
 
