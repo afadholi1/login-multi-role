@@ -21,7 +21,7 @@ function App() {
       const decoded = jwtDecode(newToken);
       
       setToken(newToken);
-      setUser({ role: decoded.role, name: decoded.username, expire: decoded.exp });
+      setUser({ role: decoded.role, name: decoded.name, expire: decoded.exp });
     } catch (error) { // Gunakan nama variabel biasa
       console.error("Auth check failed:", error.message); // Gunakan variabelnya di sini
       setUser(null);

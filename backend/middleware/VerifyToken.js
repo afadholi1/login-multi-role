@@ -1,20 +1,22 @@
 import jwt from "jsonwebtoken";
 
 export const verifyToken = (req, res, next) => {
-    // Mengambil token dari header Authorization atau Cookie
+    // 1. Ambil Access Token dari Header Authorization
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
-    // Jika kamu menggunakan Cookie (seperti yang kita set sebelumnya)
-    const cookieToken = req.cookies.refreshToken; 
+    // 2. Jika token tidak ada di header, tolak akses
+    if(token == null) return res.sendStatus(401); 
 
-    // Kita cek tokennya (disini kita pakai yang dari cookie/header sesuai settinganmu)
-    if(cookieToken == null) return res.sendStatus(401); // Unauthorized
-
-    jwt.verify(cookieToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
-        if(err) return res.sendStatus(403); // Forbidden
+    // 3. Verifikasi menggunakan ACCESS_TOKEN_SECRET (Bukan Refresh)
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+        if(err) return res.sendStatus(403); 
+        
+        // Simpan data ke request agar bisa dipakai di controller (seperti Me atau Update)
         req.email = decoded.email;
         req.userId = decoded.userId;
-        next(); // Lanjut ke fungsi berikutnya (getUsers)
+        req.role = decoded.role; 
+        
+        next(); 
     });
 }

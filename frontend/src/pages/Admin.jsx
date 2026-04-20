@@ -31,6 +31,19 @@ const Admin = () => {
     fetchData();
   }, []);
 
+ const deleteUser = async (uuid) => {
+    try {
+        const response = await axios.delete(`http://localhost:5000/users/${uuid}`, {
+            withCredentials: true
+        });
+        alert(response.data.msg); // Munculkan pesan "User Berhasil Dihapus"
+        getUsers();
+    } catch (error) {
+        // Ini akan memberitahu kita kenapa gagal
+        alert("Gagal hapus: " + (error.response?.data?.msg || error.message));
+    }
+};
+
   return (
     <div className="min-h-screen bg-slate-100">
       <Navbar />
@@ -58,7 +71,7 @@ const Admin = () => {
               <tbody>
                 {users.map((user, index) => (
                   <tr
-                    key={user.id}
+                    key={user.uuid}
                     className="border-b border-slate-100 hover:bg-slate-50 transition"
                   >
                     <td className="p-4">{index + 1}</td>
@@ -77,7 +90,10 @@ const Admin = () => {
                       <button className="text-blue-600 hover:underline mr-3 text-sm font-semibold">
                         Edit
                       </button>
-                      <button className="text-red-600 hover:underline text-sm font-semibold">
+                      <button
+                        onClick={() => deleteUser(user.uuid)}
+                        className="text-red-600 hover:underline text-sm font-semibold"
+                      >
                         Hapus
                       </button>
                     </td>

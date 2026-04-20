@@ -3,11 +3,11 @@ POST http://localhost:5000/users
 Content-Type: application/json
 
 {
-    "name": "Fadholi Dev",
-    "email": "fadholi@gmail.com",
+    "name": "User 5",
+    "email": "user6@gmail.com",
     "password": "password123",
     "confPassword": "password123",
-    "role": "admin"
+    "role": "user"
 }
 
 ### Update Nama User (Ganti UUID sesuai data di DB kamu)
@@ -15,10 +15,13 @@ PATCH http://localhost:5000/users/fe0791a7-f01d-4f30-b94b-4189b4219bf8
 Content-Type: application/json
 
 {
-    "name": "Nama Baru Fadholi",
+    "name": "Admin 1",
     "email": "admin@gmail.com",
     "role": "admin"
 }
+
+### Hapus User (Ganti UUID sesuai data di DB kamu)
+DELETE http://localhost:5000/users/aff48146-132c-4b2e-bbb7-c53741ca49cf
 
 ### Login User
 POST http://localhost:5000/login
