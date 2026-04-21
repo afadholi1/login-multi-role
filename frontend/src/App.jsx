@@ -6,23 +6,25 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import ProtectedRoute from "./middleware/ProtectedRoute";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(""); 
+  const [token, setToken] = useState("");
   const [loading, setLoading] = useState(true);
 
   const checkAuth = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:5000/token', {
-        withCredentials: true
+      const response = await axios.get("http://localhost:5000/token", {
+        withCredentials: true,
       });
       const newToken = response.data.accessToken;
       const decoded = jwtDecode(newToken);
-      
+
       setToken(newToken);
       setUser({ role: decoded.role, name: decoded.name, expire: decoded.exp });
-    } catch (error) { // Gunakan nama variabel biasa
+    } catch (error) {
+      // Gunakan nama variabel biasa
       console.error("Auth check failed:", error.message); // Gunakan variabelnya di sini
       setUser(null);
       setToken("");
@@ -58,15 +60,27 @@ function App() {
 
   return (
     <BrowserRouter>
+      {/* Navbar ditaruh di sini supaya muncul di semua route */}
+      {user && <Navbar user={user} />}
       <Routes>
         <Route path="/" element={<Login onLoginSuccess={checkAuth} />} />
-        
+
         <Route element={<ProtectedRoute isAllowed={!!user} />}>
-          <Route path="/dashboard" element={<Dashboard user={user} token={token} />} />
+          <Route
+            path="/dashboard"
+            element={<Dashboard user={user} token={token} />}
+          />
         </Route>
 
-        <Route element={<ProtectedRoute isAllowed={!!user && user.role === 'admin'} redirectPath="/dashboard" />}>
-          <Route path="/admin" element={<Admin />} />
+        <Route
+          element={
+            <ProtectedRoute
+              isAllowed={!!user && user.role === "admin"}
+              redirectPath="/dashboard"
+            />
+          }
+        >
+          <Route path="/admin" element={<Admin token={token} />} />
         </Route>
       </Routes>
     </BrowserRouter>

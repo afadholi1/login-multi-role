@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "../components/Navbar";
+// import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 
 // Dashboard sekarang menerima data 'user' dan 'token' dari App.js lewat props
@@ -10,7 +10,7 @@ const Dashboard = ({ user, token }) => {
 
   return (
     <div className="min-h-screen bg-slate-100">
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="p-8">
         <div className="bg-white p-8 rounded-2xl shadow-sm max-w-2xl mx-auto">
           <h1 className="text-3xl font-bold text-slate-800 mb-2">

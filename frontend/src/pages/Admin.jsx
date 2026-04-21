@@ -1,52 +1,66 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react"; 
+// import Navbar from "../components/Navbar";
 import axios from "axios";
-import Navbar from "../components/Navbar";
 
-const Admin = () => {
+const Admin = ({ token }) => {
   const [users, setUsers] = useState([]);
   const [msg, setMsg] = useState("");
 
-  const getUsers = async () => {
+  const getUsers = useCallback(async () => {
+    if (!token) return; // Jangan panggil jika token belum ada
+
     try {
       const response = await axios.get("http://localhost:5000/users", {
         withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       setUsers(response.data);
     } catch (error) {
       if (error.response) {
-        setMsg("Gagal mengambil data: " + error.response.data.msg);
+        setMsg(
+          "Gagal mengambil data: " + (error.response.data.msg || error.message),
+        );
       }
     }
-  };
+  }, [token]); // Fungsi ini hanya berubah jika token berubah
 
   useEffect(() => {
+    let isMounted = true; // Untuk mencegah memory leak
+
     const fetchData = async () => {
-      try {
+      if (isMounted) {
         await getUsers();
-      } catch (error) {
-        console.error("Error fetching users:", error);
       }
     };
 
     fetchData();
-  }, []);
 
- const deleteUser = async (uuid) => {
+    return () => {
+      isMounted = false; // Bersihkan saat komponen unmount
+    };
+  }, [getUsers]);
+
+  const deleteUser = async (uuid) => {
+  if (window.confirm("Yakin ingin menghapus?")) {
     try {
-        const response = await axios.delete(`http://localhost:5000/users/${uuid}`, {
-            withCredentials: true
-        });
-        alert(response.data.msg); // Munculkan pesan "User Berhasil Dihapus"
-        getUsers();
+      await axios.delete(`http://localhost:5000/users/${uuid}`, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}` // Tambahkan ini agar tidak 401
+        }
+      });
+      getUsers(); // Refresh tabel
     } catch (error) {
-        // Ini akan memberitahu kita kenapa gagal
-        alert("Gagal hapus: " + (error.response?.data?.msg || error.message));
+      console.log(error);
     }
+  }
 };
 
   return (
     <div className="min-h-screen bg-slate-100">
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="p-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-2xl font-bold text-slate-800 mb-6">
