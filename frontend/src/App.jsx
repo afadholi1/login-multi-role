@@ -6,9 +6,9 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import ProtectedRoute from "./middleware/ProtectedRoute";
-import Navbar from "./components/Navbar";
 import AddUser from "./pages/AddUser";
 import EditUser from "./pages/EditUser";
+import Sidebar from "./components/Sidebar";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -62,8 +62,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* Navbar ditaruh di sini supaya muncul di semua route */}
-      {user && <Navbar user={user} />}
+    
       <Routes>
         <Route path="/" element={<Login onLoginSuccess={checkAuth} />} />
 
