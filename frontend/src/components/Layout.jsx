@@ -17,6 +17,7 @@ const Layout = ({ children, user }) => {
             console.log("Logout failed:", error);
         }
     }
+    
 
     return (
         <div className="min-h-screen bg-slate-50">
@@ -27,7 +28,7 @@ const Layout = ({ children, user }) => {
                 {/* Sidebar di kiri */}
                 <Sidebar user={user} logout={onLogout} />
 
-                <main className="flex-1 md:ml-64">
+               <main className="flex-1 p-6 md:ml-64">
                     {children}
                 </main>
             </div>

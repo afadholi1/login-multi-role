@@ -57,10 +57,8 @@ const Admin = ({ token, user }) => {
   return (
     <div className="min-h-screen bg-slate-100">
       <Layout user={user}>
-        <div className="p-8">
+        <div>
           <div className="max-w-4xl mx-auto">
-            {msg && <p className="text-red-500 mb-4">{msg}</p>}
-
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h1 className="text-2xl font-bold text-slate-800">
@@ -77,7 +75,7 @@ const Admin = ({ token, user }) => {
                 + Tambah User
               </Link>
             </div>
-
+            {msg && <p className="text-red-500 mb-4">{msg}</p>}
             <div className="bg-white shadow-sm rounded-xl overflow-hidden border border-slate-200">
               <table className="w-full text-left border-collapse">
                 <thead className="bg-slate-50 border-b border-slate-200">

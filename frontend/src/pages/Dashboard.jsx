@@ -1,78 +1,74 @@
 import React from "react";
-// import Navbar from "../components/Navbar";
-import { useNavigate } from "react-router-dom";
+import Layout from "../components/Layout";
+import { Users, ShieldCheck, Clock } from "lucide-react";
 
-// Dashboard sekarang menerima data 'user' dan 'token' dari App.js lewat props
-const Dashboard = ({ user, token }) => {
-  // Karena data user sudah dicek di App.js, kita tinggal pakai
-
-  const navigate = useNavigate();
-
+const Dashboard = ({ user }) => {
   return (
-    <div className="min-h-screen bg-slate-100">
-      {/* <Navbar /> */}
-      <div className="p-8">
-        <div className="bg-white p-8 rounded-2xl shadow-sm max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">
-            Selamat Datang, <span className="text-blue-600">{user?.name}</span>!
-          </h1>
+    <Layout user={user}>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-slate-800">Dashboard</h1>
+        <p className="text-slate-500">
+          Selamat datang kembali,{" "}
+          <span className="font-semibold text-blue-600">{user?.name}</span>!
+        </p>
+      </div>
 
-          <p className="text-slate-500 mb-6 font-medium">
-            Role kamu saat ini adalah:
-            <span
-              className={`ml-2 px-3 py-1 rounded-full text-sm ${
-                user?.role === "admin"
-                  ? "bg-purple-100 text-purple-700"
-                  : "bg-green-100 text-green-700"
-              }`}
-            >
+      {/* Grid Kartu Statistik */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Kartu 1: Status Login */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-5">
+          <div className="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center">
+            <ShieldCheck size={28} />
+          </div>
+          <div>
+            <p className="text-sm text-slate-500 font-medium">Status Akun</p>
+            <p className="text-xl font-bold text-slate-800 uppercase">
               {user?.role}
-            </span>
-          </p>
+            </p>
+          </div>
+        </div>
 
-          {/* Munculkan tombol ini hanya jika user adalah admin */}
-          {user?.role === "admin" && (
-            <div className="mt-6">
-              <button
-                onClick={() => navigate("/admin")}
-                className="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl transition shadow-lg"
-              >
-                Buka Panel Kontrol Admin
-              </button>
-            </div>
-          )}
+        {/* Kartu 2: Info (Placeholder untuk total user) */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-5">
+          <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center">
+            <Users size={28} />
+          </div>
+          <div>
+            <p className="text-sm text-slate-500 font-medium">Manajemen</p>
+            <p className="text-xl font-bold text-slate-800">User Akses</p>
+          </div>
+        </div>
 
-          <div className="border-t pt-6">
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">
-              Informasi Sesi Keamanan
-            </h2>
-
-            <div className="grid grid-cols-1 gap-4">
-              <div className="bg-slate-50 p-4 rounded-lg">
-                <p className="text-xs text-slate-400 mb-1">
-                  Access Token (In-Memory)
-                </p>
-                {/* Token ini dikirim dari App.js */}
-                <p className="text-xs font-mono break-all text-slate-600">
-                  {token || "Token tidak ditemukan"}
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <p className="text-xs text-blue-400 mb-1">Token Expires At</p>
-
-              <p className="text-sm font-semibold text-blue-700">
-                {new Date(user?.expire * 1000).toLocaleString("id-ID", {
-                  dateStyle: "medium",
-                  timeStyle: "short",
-                })}
-              </p>
-            </div>
+        {/* Kartu 3: Waktu Login (Opsional) */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-5">
+          <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center">
+            <Clock size={28} />
+          </div>
+          <div>
+            <p className="text-sm text-slate-500 font-medium">Sesi Berakhir</p>
+            <p className="text-sm font-bold text-slate-800">
+              {new Date(user?.expire * 1000).toLocaleString("id-ID", {
+                dateStyle: "short",
+                timeStyle: "short",
+              })}
+            </p>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Welcome Banner */}
+      <div className="mt-8 p-8 bg-blue-600 rounded-3xl text-white relative overflow-hidden shadow-lg">
+        <div className="relative z-10">
+          <h2 className="text-2xl font-bold mb-2">Halo, {user?.role}!</h2>
+          <p className="text-blue-100 max-w-md">
+            Gunakan Sidebar di sebelah kiri untuk menavigasi aplikasi. Kamu bisa
+            mengelola user atau mengubah pengaturan profil.
+          </p>
+        </div>
+        {/* Dekorasi lingkaran di background */}
+        <div className="absolute top-5 right-5 w-40 h-40 bg-blue-500 rounded-full opacity-50"></div>
+      </div>
+    </Layout>
   );
 };
 
