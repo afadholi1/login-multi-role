@@ -7,6 +7,8 @@ import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import ProtectedRoute from "./middleware/ProtectedRoute";
 import Navbar from "./components/Navbar";
+import AddUser from "./pages/AddUser";
+import EditUser from "./pages/EditUser";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -80,7 +82,15 @@ function App() {
             />
           }
         >
-          <Route path="/admin" element={<Admin token={token} />} />
+          <Route path="/admin" element={<Admin token={token} user={user} />} />
+          <Route
+            path="/admin/add"
+            element={<AddUser token={token} user={user} />}
+          />
+          <Route
+            path="/admin/edit/:id"
+            element={<EditUser token={token} user={user} />}
+          />
         </Route>
       </Routes>
     </BrowserRouter>

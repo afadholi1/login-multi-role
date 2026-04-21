@@ -1,7 +1,7 @@
 import express from "express";
 import { Register, Login, Logout, Me } from "../controllers/Auth.js"; // Tambahkan 'Me'
 import { refreshToken } from "../controllers/RefreshToken.js"; 
-import { getUsers, updateUser, deleteUser } from "../controllers/Users.js";
+import { getUsers, getUserById, updateUser, deleteUser } from "../controllers/Users.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 
 const router = express.Router();
@@ -13,8 +13,9 @@ router.get('/token', refreshToken);
 router.delete('/logout', Logout);
 
 // --- PROTECTED ROUTES (Butuh Login) ---
-router.get('/me', verifyToken, Me); // Untuk ambil data profil sendiri
+router.get('/me', verifyToken, Me); 
 router.get('/users', verifyToken, getUsers);
+router.get('/users/:id', verifyToken, getUserById);
 router.patch('/users/:id', verifyToken, updateUser);
 router.delete('/users/:id', verifyToken, deleteUser);
 

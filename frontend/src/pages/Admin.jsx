@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react"; 
+import React, { useState, useEffect, useCallback } from "react";
 // import Navbar from "../components/Navbar";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Admin = ({ token }) => {
   const [users, setUsers] = useState([]);
@@ -27,36 +28,31 @@ const Admin = ({ token }) => {
   }, [token]); // Fungsi ini hanya berubah jika token berubah
 
   useEffect(() => {
-    let isMounted = true; // Untuk mencegah memory leak
-
     const fetchData = async () => {
-      if (isMounted) {
+      // Pastikan kita tidak menembak API kalau token sedang kosong/expired
+      if (token) {
         await getUsers();
       }
     };
 
     fetchData();
-
-    return () => {
-      isMounted = false; // Bersihkan saat komponen unmount
-    };
-  }, [getUsers]);
+  }, [getUsers, token]); // Tambahkan 'token' di sini
 
   const deleteUser = async (uuid) => {
-  if (window.confirm("Yakin ingin menghapus?")) {
-    try {
-      await axios.delete(`http://localhost:5000/users/${uuid}`, {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${token}` // Tambahkan ini agar tidak 401
-        }
-      });
-      getUsers(); // Refresh tabel
-    } catch (error) {
-      console.log(error);
+    if (window.confirm("Yakin ingin menghapus?")) {
+      try {
+        await axios.delete(`http://localhost:5000/users/${uuid}`, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`, // Tambahkan ini agar tidak 401
+          },
+        });
+        getUsers(); // Refresh tabel
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -68,6 +64,18 @@ const Admin = ({ token }) => {
           </h1>
 
           {msg && <p className="text-red-500 mb-4">{msg}</p>}
+
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold text-slate-800">
+              Daftar Pengguna
+            </h1>
+            <Link
+              to="/admin/add"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all shadow-sm"
+            >
+              + Tambah User
+            </Link>
+          </div>
 
           <div className="bg-white shadow-sm rounded-xl overflow-hidden border border-slate-200">
             <table className="w-full text-left border-collapse">
@@ -101,12 +109,15 @@ const Admin = ({ token }) => {
                       </span>
                     </td>
                     <td className="p-4 text-center">
-                      <button className="text-blue-600 hover:underline mr-3 text-sm font-semibold">
+                      <Link
+                        to={`/admin/edit/${user.uuid}`}
+                        className="bg-blue-50 text-blue-600 px-3 py-1 rounded-md text-sm font-semibold hover:bg-blue-500 hover:text-white transition-all duration-200 border border-blue-100"
+                      >
                         Edit
-                      </button>
+                      </Link>
                       <button
                         onClick={() => deleteUser(user.uuid)}
-                        className="text-red-600 hover:underline text-sm font-semibold"
+                        className="bg-red-50 text-red-600 px-3 py-1 rounded-md text-sm font-medium hover:bg-red-600 hover:text-white transition-all duration-200 cursor-pointer"
                       >
                         Hapus
                       </button>

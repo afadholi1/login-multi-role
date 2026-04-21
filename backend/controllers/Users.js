@@ -12,28 +12,50 @@ export const getUsers = async(req, res) => {
     }
 }
 
-
-export const updateUser = async(req, res) => {
+export const getUserById = async(req, res) => {
     try {
-        const user = await Users.findOne({
+        const response = await Users.findOne({
+            attributes:['uuid','name','email','role'],
             where: {
-                uuid: req.params.id // 'id' di sini harus sama dengan ':id' di router
+                uuid: req.params.id
             }
         });
-        if(!user) return res.status(404).json({msg: "User tidak ditemukan"});
-
-        const { name, email, role } = req.body;
-        
-        await Users.update({ name, email, role }, {
-            where: {
-                id: user.id
-            }
-        });
-        res.status(200).json({msg: "User Berhasil Diupdate"});
+        res.status(200).json(response);
     } catch (error) {
-        res.status(400).json({msg: error.message});
+        res.status(500).json({msg: error.message});
     }
 }
+
+export const updateUser = async (req, res) => {
+  try {
+    const user = await Users.findOne({
+      where: { uuid: req.params.id }
+    });
+    if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
+
+    const { name, email, role, password, confPassword } = req.body;
+
+    // Logika Password: Jika user tidak mengisi password, pakai yang lama
+    let hashPassword = user.password;
+    if (password && password !== "") {
+      if (password !== confPassword) {
+        return res.status(400).json({ msg: "Password tidak cocok" });
+      }
+      // Gunakan library hashing kamu (contoh argon2/bcrypt)
+      // const salt = await argon2.genSalt();
+      // hashPassword = await argon2.hash(password, salt);
+    }
+
+    await Users.update(
+      { name, email, role, password: hashPassword }, 
+      { where: { id: user.id } }
+    );
+    
+    res.status(200).json({ msg: "User Berhasil Diupdate" });
+  } catch (error) {
+    res.status(400).json({ msg: error.message });
+  }
+};
 
 
 export const deleteUser = async(req, res) => {
