@@ -7,7 +7,7 @@ Project ini adalah aplikasi Fullstack JavaScript untuk mempelajari sistem autent
 * **Security:** JWT Access Token & Refresh Token (HttpOnly Cookie).
 * **Database:** MySQL dengan Sequelize ORM.
 * **Backend:** Node.js & Express.
-* **Frontend:** React JS (Coming Soon).
+* **Frontend:** React JS, Tailwind CSS.
 
 ### Cara Menjalankan:
 1. Clone repo ini.
@@ -15,3 +15,5 @@ Project ini adalah aplikasi Fullstack JavaScript untuk mempelajari sistem autent
 3. Buat database `db_multi_role` di MySQL.
 4. Sesuaikan file `.env`.
 5. Jalankan `nodemon index.js`.
+
+dst.
