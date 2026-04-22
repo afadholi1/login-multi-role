@@ -15,5 +15,6 @@ Project ini adalah aplikasi Fullstack JavaScript untuk mempelajari sistem autent
 3. Buat database `db_multi_role` di MySQL.
 4. Sesuaikan file `.env`.
 5. Jalankan `nodemon index.js`.
-
-dst.
+6. `cd frontend` lalu `npm install`.
+7. Instal library tambahan `npm install jwt-decode lucide-react`.
+8. Jalankan `npm run dev`.
