@@ -1,5 +1,5 @@
 import express from "express";
-import { Register, Login, Logout, Me } from "../controllers/Auth.js"; // Tambahkan 'Me'
+import { Register, Login, Logout, Me, updateMe } from "../controllers/Auth.js"; // Tambahkan 'Me'
 import { refreshToken } from "../controllers/RefreshToken.js"; 
 import { getUsers, getUserById, updateUser, deleteUser } from "../controllers/Users.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
@@ -14,6 +14,7 @@ router.delete('/logout', Logout);
 
 // --- PROTECTED ROUTES (Butuh Login) ---
 router.get('/me', verifyToken, Me); 
+router.patch('/me', verifyToken, updateMe); 
 router.get('/users', verifyToken, getUsers);
 router.get('/users/:id', verifyToken, getUserById);
 router.patch('/users/:id', verifyToken, updateUser);

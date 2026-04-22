@@ -9,6 +9,7 @@ import ProtectedRoute from "./middleware/ProtectedRoute";
 import AddUser from "./pages/AddUser";
 import EditUser from "./pages/EditUser";
 import Sidebar from "./components/Sidebar";
+import Settings from "./pages/Settings";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -62,7 +63,6 @@ function App() {
 
   return (
     <BrowserRouter>
-    
       <Routes>
         <Route path="/" element={<Login onLoginSuccess={checkAuth} />} />
 
@@ -70,6 +70,10 @@ function App() {
           <Route
             path="/dashboard"
             element={<Dashboard user={user} token={token} />}
+          />
+          <Route
+            path="/settings"
+            element={<Settings user={user} key={user?.uuid} />}
           />
         </Route>
 

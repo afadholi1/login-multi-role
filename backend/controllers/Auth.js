@@ -45,7 +45,8 @@ export const Login = async(req, res) => {
 
         // Masukkan 'name' ke dalam payload token
         const accessToken = jwt.sign({userId, name, email, role}, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: '20s' 
+            // expiresIn: '20s' 
+            expiresIn: '1d'
         });
 
         const refreshToken = jwt.sign({userId, name, email, role}, process.env.REFRESH_TOKEN_SECRET, {
@@ -100,6 +101,45 @@ export const Me = async (req, res) => {
         });
         if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
         res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}
+
+export const updateMe = async (req, res) => {
+    try {
+        const user = await Users.findOne({
+            where: {
+                id: req.userId // Diambil dari token
+            }
+        });
+
+        if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
+
+        const { name, email, password, confPassword } = req.body;
+        
+        let hashPassword;
+        if (password === "" || password === null) {
+            // Jika password tidak diisi, gunakan password lama
+            hashPassword = user.password;
+        } else {
+            // Jika ganti password, validasi konfirmasi
+            if (password !== confPassword) return res.status(400).json({ msg: "Password dan Confirm Password tidak cocok" });
+            const salt = await bcrypt.genSalt();
+            hashPassword = await bcrypt.hash(password, salt);
+        }
+
+        await Users.update({
+            name: name || user.name,
+            email: email || user.email,
+            password: hashPassword
+        }, {
+            where: {
+                id: user.id
+            }
+        });
+
+        res.status(200).json({ msg: "Profil Berhasil Diperbarui" });
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }
