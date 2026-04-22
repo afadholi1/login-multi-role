@@ -1,8 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
+import axios from "axios";
 import { Users, ShieldCheck, Clock } from "lucide-react";
 
-const Dashboard = ({ user }) => {
+const Dashboard = ({ user, token }) => {
+  const [totalUsers, setTotalUsers] = useState(0);
+
+  useEffect(() => {
+    const fetchTotalUsers = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/users", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setTotalUsers(response.data.length);
+      } catch (error) {
+  console.log("Gagal mengambil jumlah user", error.message);
+}
+    };
+
+    if (user?.role === "admin") {
+      fetchTotalUsers();
+    }
+  }, [token, user]);
+
   return (
     <Layout user={user}>
       <div className="mb-8">
@@ -34,8 +54,10 @@ const Dashboard = ({ user }) => {
             <Users size={28} />
           </div>
           <div>
-            <p className="text-sm text-slate-500 font-medium">Manajemen</p>
-            <p className="text-xl font-bold text-slate-800">User Akses</p>
+            <p className="text-sm text-slate-500 font-medium">Total Pengguna</p>
+            <p className="text-xl font-bold text-slate-800">
+              {user?.role === "admin" ? totalUsers : "Terproteksi"}
+            </p>
           </div>
         </div>
 

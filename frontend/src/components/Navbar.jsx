@@ -1,22 +1,7 @@
 import React from 'react';
-import axios from 'axios';
-// import { useNavigate } from 'react-router-dom';
 
 // 1. Tambahkan props { user } di sini
-const Navbar = ({ user }) => { 
-    // const navigate = useNavigate();
-
-    const Logout = async () => {
-        try {
-            await axios.delete('http://localhost:5000/logout', {
-                withCredentials: true
-            });
-            // Gunakan window.location agar state aplikasi ter-reset total saat logout
-            window.location.href = "/"; 
-        } catch (error) {
-            console.log("Logout failed:", error);
-        }
-    }
+const Navbar = ({ user, logout }) => { 
 
     return (
         <nav className="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center sticky top-0 z-10">
@@ -35,7 +20,7 @@ const Navbar = ({ user }) => {
                 )}
 
                 <button 
-                    onClick={Logout}
+                    onClick={logout}
                     className="bg-red-50 hover:bg-red-100 text-red-600 font-semibold px-4 py-2 rounded-lg transition-all duration-200 border border-red-100 cursor-pointer"
                 >
                     Log Out
